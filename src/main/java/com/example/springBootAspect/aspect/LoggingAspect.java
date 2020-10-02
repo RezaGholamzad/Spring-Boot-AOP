@@ -4,10 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
@@ -76,6 +73,9 @@ public class LoggingAspect {
 
     }
 
+    //*********************************************************************************
+
+    // The first way :
     /*
         @After: executed in two situations — when a method executes successfully or it throws an exception.
         @AfterReturning: executed only when a method executes successfully.
@@ -85,9 +85,41 @@ public class LoggingAspect {
     public void afterAdvice(JoinPoint joinPoint){
 
         // logging
-        LOGGER.info("finish method");
+        LOGGER.info("finish method 1");
 
     }
+
+    // The second way :
+    /*
+        @After(value = "execution(* com.example.springBootAspect.controller.EmployeeController.*(..)))")
+        Which is equivalent to:
+        @After("employeeControllerLog()")
+    */
+    @Pointcut("execution(* com.example.springBootAspect.*.EmployeeController.*(..)))")
+    public void employeeControllerLog2(){}
+
+    @After("employeeControllerLog2()")
+    public void afterAdvice2(JoinPoint joinPoint){
+
+        // logging
+        LOGGER.info("finish method 2");
+
+    }
+
+    //the third way :
+    /*
+        One AOP best practice is to define a common class to store all the pointcuts.
+        This helps in maintaining the pointcuts in one place.
+     */
+    @After("com.example.springBootAspect.aspect.CommonPointCut.employeeControllerLog()")
+    public void afterAdvice3(JoinPoint joinPoint){
+
+        // logging
+        LOGGER.info("finish method 3");
+
+    }
+
+    //**********************************************************************************
 
 //    @Around : Advice that surrounds a join point such as a method invocation.
     @Around(value = "execution(* com.example.springBootAspect.controller.EmployeeController.*(..)))")
