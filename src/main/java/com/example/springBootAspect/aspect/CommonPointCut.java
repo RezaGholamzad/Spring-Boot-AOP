@@ -13,7 +13,7 @@ public class CommonPointCut {
     public void employeeControllerLog(){}
 
     /*
-        we want to consider all the methods within the classes defined in package com.example
+        we want to consider all the methods within the classes defined in package com.example and subpackage it
      */
     @Pointcut("within(com.example..*)")
     public void employeeControllerLog3(){}
